@@ -7,36 +7,43 @@ function Register() {
   const [department, setDepartment] = useState("");
   const [role, setRole] = useState("");
 
-  const handleSubmit = () => {
+const handleSubmit = () => {
 
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !department ||
-      !role
-    ) {
-      alert("Please fill all fields");
-      return;
-    }
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !department ||
+    !role
+  ) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    const user = {
-      name,
-      email,
-      password,
-      department,
-      role
-    };
-
-    localStorage.setItem(
-  email.trim().toLowerCase(),
-      JSON.stringify(user)
-    );
-
-    alert("Registration Successful");
-
-    console.log(user);
+  const user = {
+    name,
+    email,
+    password,
+    department,
+    role,
   };
+
+  fetch("http://localhost:5000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message);
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
   return (
     <div>

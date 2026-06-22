@@ -5,12 +5,18 @@ import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import Navbar from "./components/Navbar";
+import Students from "./pages/Students";
+
 
 function App() {
   return (
     <BrowserRouter>
     <Navbar />
       <Routes>
+        <Route
+          path="/students"
+          element={<Students />}
+        />
 
         <Route
           path="/"
@@ -31,6 +37,7 @@ function App() {
           path="/teacher"
           element={<TeacherDashboard />}
         />
+        
 
       </Routes>
 

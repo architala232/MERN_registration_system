@@ -7,34 +7,46 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const userData = localStorage.getItem(
-      email.trim().toLowerCase()
-    );
+ const handleLogin = () => {
 
-    if (!userData) {
-      alert("User Not Found");
-      return;
-    }
+  fetch("http://localhost:5000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
 
-    const user = JSON.parse(userData);
+      if (!data.success) {
+        alert(data.message);
+        return;
+      }
 
-    if (user.password.trim() !== password.trim()) {
-      alert("Wrong Password");
-      return;
-    }
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(data.user)
+      );
 
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(user)
-    );
+      if (
+        data.user.role.toLowerCase() ===
+        "student"
+      ) {
+        navigate("/student");
+      } else {
+        navigate("/teacher");
+      }
 
-    if (user.role.toLowerCase() === "student") {
-      navigate("/student");
-    } else {
-      navigate("/teacher");
-    }
-  };
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+};
 
   return (
     <div>
