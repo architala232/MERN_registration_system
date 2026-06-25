@@ -1,69 +1,96 @@
+const bcrypt = require("bcrypt");
 const express = require("express");
 const cors = require("cors");
+const User = require("./models/User");
+// const mongoose = require("mongoose");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-// app.use(express.json());
-app.post("/login", (req, res) => {
 
-  const { email, password } = req.body;
+const dns = require("dns");
 
-  const user = users.find(
-    (u) =>
-      u.email === email &&
-      u.password === password
-  );
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const mongoose = require("mongoose");
 
-  if (user) {
-    res.json({
-      success: true,
-      user,
-    });
-  } else {
-    res.json({
-      success: false,
-      message: "Invalid Credentials",
-    });
-  }
-
+mongoose.connect(
+  "mongodb+srv://talaarchi2007_db_user:studentportal1@cluster0.oip9eoc.mongodb.net/studentportal?retryWrites=true&w=majority&appName=Cluster0"
+)
+.then(() => {
+  console.log("MongoDB Connected");
+})
+.catch((err) => {
+  console.log(err);
 });
+
 app.get("/", (req, res) => {
   res.send("Backend Running");
 });
+app.post("/register", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-app.get("/students", (req, res) => {
-  res.json([
-    {
-      id: 1,
-      name: "Aarchi",
-      department: "IT",
-    },
-    {
-      id: 2,
-      name: "Rahul",
-      department: "Computer",
-    },
-  ]);
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.json({
+        message: "Email Already Exists",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      password,
+      10
+    );
+
+    const user = new User({
+      ...req.body,
+      password: hashedPassword,
+    });
+
+    await user.save();
+
+    res.json({
+      message: "Registration Successful",
+    });
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const users = [];
+    const user = await User.findOne({ email });
 
-app.post("/register", (req, res) => {
-  console.log(req.body);
+    if (!user) {
+      return res.status(404).json({
+        message: "User Not Found",
+      });
+    }
 
-  users.push(req.body);
+const isMatch = await bcrypt.compare(
+  password,
+  user.password
+);
 
-  res.json({
-    message: "Registration Successful",
-  });
+if (!isMatch) {
+        return res.status(401).json({
+        message: "Wrong Password",
+      });
+    }
+
+    res.json({
+      message: "Login Successful",
+      user,
+    });
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
-
-app.get("/users", (req, res) => {
-  res.json(users);
-});
-
 app.listen(5000, () => {
   console.log("Server Running on Port 5000");
 });

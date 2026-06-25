@@ -1,25 +1,26 @@
 import { useNavigate } from "react-router-dom";
 
 function TeacherDashboard() {
-
   const navigate = useNavigate();
 
   const user = JSON.parse(
     localStorage.getItem("currentUser")
   );
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("currentUser");
     navigate("/login");
   };
 
   return (
     <div>
-      <h1>Teacher Dashboard</h1>
+      <h1>Welcome {user.name}</h1>
 
-      <h2>Welcome {user?.name}</h2>
+      <p>Email: {user.email}</p>
+      <p>Department: {user.department}</p>
+      <p>Role: {user.role}</p>
 
-      <button onClick={logout}>
+      <button onClick={handleLogout}>
         Logout
       </button>
     </div>

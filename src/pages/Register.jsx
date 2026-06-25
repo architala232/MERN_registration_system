@@ -7,8 +7,7 @@ function Register() {
   const [department, setDepartment] = useState("");
   const [role, setRole] = useState("");
 
-const handleSubmit = () => {
-
+const handleSubmit = async () => {
   if (
     !name ||
     !email ||
@@ -28,21 +27,31 @@ const handleSubmit = () => {
     role,
   };
 
-  fetch("http://localhost:5000/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      alert(data.message);
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  try {
+    const response = await fetch(
+      "http://localhost:5000/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    setName("");
+    setEmail("");
+    setPassword("");
+    setDepartment("");
+    setRole("");
+  } catch (error) {
+    console.log(error);
+    alert("Registration Failed");
+  }
 };
 
   return (

@@ -7,45 +7,48 @@ function Login() {
 
   const navigate = useNavigate();
 
- const handleLogin = () => {
-
-  fetch("http://localhost:5000/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-
-      if (!data.success) {
-        alert(data.message);
-        return;
+const handleLogin = async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:5000/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       }
+    );
 
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify(data.user)
-      );
+    const data = await response.json();
 
-      if (
-        data.user.role.toLowerCase() ===
-        "student"
-      ) {
-        navigate("/student");
-      } else {
-        navigate("/teacher");
-      }
+    if (!response.ok) {
+      alert(data.message);
+      return;
+    }
 
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(data.user)
+    );
 
+    alert(data.message);
+
+    if (
+      data.user.role.toLowerCase() ===
+      "student"
+    ) {
+      navigate("/student");
+    } else {
+      navigate("/teacher");
+    }
+  } catch (error) {
+    console.log(error);
+    alert("Server Error");
+  }
 };
 
   return (

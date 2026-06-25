@@ -6,6 +6,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import Navbar from "./components/Navbar";
 import Students from "./pages/Students";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
@@ -29,14 +30,22 @@ function App() {
         />
 
         <Route
-          path="/student"
-          element={<StudentDashboard />}
-        />
+  path="/student"
+  element={
+    <ProtectedRoute>
+      <StudentDashboard />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
-          path="/teacher"
-          element={<TeacherDashboard />}
-        />
+  path="/teacher"
+  element={
+    <ProtectedRoute>
+      <TeacherDashboard />
+    </ProtectedRoute>
+  }
+/>
         
 
       </Routes>
