@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+
 function StudentDashboard() {
   const navigate = useNavigate();
 
@@ -8,23 +9,59 @@ function StudentDashboard() {
   );
 
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/login");
-  };
+  localStorage.removeItem("currentUser");
+  localStorage.removeItem("token");
+  navigate("/login");
+};
 
   return (
-    <div>
-      <h1>Welcome {user.name}</h1>
+  <div className="container mt-5">
 
-      <p>Email: {user.email}</p>
-      <p>Department: {user.department}</p>
-      <p>Role: {user.role}</p>
+    <div className="row justify-content-center">
 
-      <button onClick={handleLogout}>
-        Logout
-      </button>
+      <div className="col-md-6">
+
+        <div className="card shadow">
+
+          <div className="card-header bg-primary text-white">
+            <h3 className="mb-0">Student Dashboard</h3>
+          </div>
+
+          <div className="card-body">
+
+            <h4 className="mb-3">
+              Welcome {user.name}
+            </h4>
+
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+
+            <p>
+              <strong>Department:</strong> {user.department}
+            </p>
+
+            <p>
+              <strong>Role:</strong> {user.role}
+            </p>
+
+            <button
+  className="btn btn-danger"
+  onClick={handleLogout}
+>
+  Logout
+</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
-  );
+
+  </div>
+);
 }
 
 export default StudentDashboard;

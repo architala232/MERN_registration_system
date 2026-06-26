@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Register.css";
 
 function Register() {
   const [name, setName] = useState("");
@@ -55,67 +56,55 @@ const handleSubmit = async () => {
 };
 
   return (
-    <div>
+  <div className="container">
+    <h1>Student Registration</h1>
 
-      <h1>Student Registration</h1>
+    <input
+      type="text"
+      placeholder="Enter Name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+    />
 
-      <input
-        type="text"
-        placeholder="Enter Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+    <input
+      type="email"
+      placeholder="Enter Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
 
-      <br /><br />
+    <input
+      type="password"
+      placeholder="Enter Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <select
+      value={department}
+      onChange={(e) => setDepartment(e.target.value)}
+    >
+      <option value="">Select Department</option>
+      <option>Computer</option>
+      <option>IT</option>
+      <option>Mechanical</option>
+      <option>Civil</option>
+    </select>
 
-      <br /><br />
+    <select
+      value={role}
+      onChange={(e) => setRole(e.target.value)}
+    >
+      <option value="">Select Role</option>
+      <option value="student">Student</option>
+      <option value="teacher">Teacher</option>
+    </select>
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <br /><br />
-
-      <select
-        value={department}
-        onChange={(e) => setDepartment(e.target.value)}
-      >
-        <option value="">Select Department</option>
-        <option>Computer</option>
-        <option>IT</option>
-        <option>Mechanical</option>
-        <option>Civil</option>
-      </select>
-
-      <br /><br />
-
-      <select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      >
-        <option value="">Select Role</option>
-        <option value="student">Student</option>
-        <option value="teacher">Teacher</option>
-      </select>
-
-      <br /><br />
-
-      <button onClick={handleSubmit}>
-        Register
-      </button>
-
-    </div>
-  );
+    <button onClick={handleSubmit}>
+      Register
+    </button>
+  </div>
+);
 }
 
 export default Register;

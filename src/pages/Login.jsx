@@ -2,78 +2,107 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
-const handleLogin = async () => {
-  try {
-    const response = await fetch(
-      "http://localhost:5000/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      }
-    );
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
 
-    const data = await response.json();
+  const handleChange = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    if (!response.ok) {
-      alert(data.message);
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(data.user)
-    );
+    const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+
+    const data = await res.json();
 
     alert(data.message);
 
-    if (
-      data.user.role.toLowerCase() ===
-      "student"
-    ) {
-      navigate("/student");
-    } else {
-      navigate("/teacher");
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
+
+      if (data.user.role === "student") {
+        navigate("/student");
+      } else {
+        navigate("/teacher");
+      }
     }
-  } catch (error) {
-    console.log(error);
-    alert("Server Error");
-  }
-};
+  };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
 
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <div className="col-md-5">
 
-      <br /><br />
+          <div className="card shadow">
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+            <div className="card-body">
 
-      <br /><br />
+              <h3 className="text-center mb-4">
+                Login
+              </h3>
 
-      <button onClick={handleLogin}>
-        Login
-      </button>
+              <form onSubmit={handleSubmit}>
+
+                <div className="mb-3">
+                  <label>Email</label>
+
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="Enter Email"
+                    value={user.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Password</label>
+
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    placeholder="Enter Password"
+                    value={user.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <button
+                  className="btn btn-primary w-100"
+                  type="submit"
+                >
+                  Login
+                </button>
+
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
     </div>
   );
 }

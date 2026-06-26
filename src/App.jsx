@@ -7,18 +7,16 @@ import TeacherDashboard from "./pages/TeacherDashboard";
 import Navbar from "./components/Navbar";
 import Students from "./pages/Students";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import StudentList from "./pages/StudentList";
+import AddStudent from "./pages/AddStudent";
+import EditStudent from "./pages/EditStudent";
 
 function App() {
   return (
     <BrowserRouter>
     <Navbar />
       <Routes>
-        <Route
-          path="/students"
-          element={<Students />}
-        />
-
+        
         <Route
           path="/"
           element={<Register />}
@@ -43,6 +41,30 @@ function App() {
   element={
     <ProtectedRoute>
       <TeacherDashboard />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/students"
+  element={
+    <ProtectedRoute>
+      <StudentList />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/students/add"
+  element={
+    <ProtectedRoute>
+      <AddStudent />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/students/edit/:id"
+  element={
+    <ProtectedRoute>
+      <EditStudent />
     </ProtectedRoute>
   }
 />
